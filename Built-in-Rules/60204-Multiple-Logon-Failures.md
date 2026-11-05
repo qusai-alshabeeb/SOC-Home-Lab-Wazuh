@@ -91,4 +91,4 @@ It also demonstrated the importance of investigating the source, target account,
 
 ## 9. Related Incident
 
-[INC-002 – Brute Force](../../Incidents/INC-002-Brute-Force.md)
+[INC-002 – Brute Force](../Incidents/INC-002-Brute-Force.md)
