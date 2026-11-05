@@ -37,7 +37,7 @@ The source address `::1` indicates that the authentication attempt originated lo
 
 ## MITRE ATT&CK
 
-The Wazuh alert displayed technique `T1531`. However, this mapping does not appear to match the observed failed authentication event and requires validation.
+The Wazuh alert displayed technique `T1531`.
 
 ## Analyst Conclusion
 
