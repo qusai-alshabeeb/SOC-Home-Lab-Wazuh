@@ -21,7 +21,7 @@ This project currently uses built-in Wazuh detection rules to monitor Windows se
 - **Windows Event ID:** 4625
 - **Severity Level:** 5
 - **Lab Scenario:** A failed login attempt using a non-existent account.
-- **Related Incident:** [INC-001](../Incidents/INC-001-Failed-Login.md)
+- **Related Incident:** [INC-001](../Built-in-Rules/60122-Failed-Login.md)
 
 ### Rule 60204 – Multiple Logon Failures
 
@@ -30,7 +30,7 @@ This project currently uses built-in Wazuh detection rules to monitor Windows se
 - **Severity Level:** 10
 - **Lab Scenario:** Simulated repeated authentication failures using PowerShell.
 - **MITRE ATT&CK:** T1110 – Brute Force
-- **Related Incident:** [INC-002](../Incidents/INC-002-Brute-Force.md)
+- **Related Incident:** [INC-002](../Built-in-Rules/60204-Multiple-Logon-Failures.md)
 
 ## 3. Custom Detection Rules
 
