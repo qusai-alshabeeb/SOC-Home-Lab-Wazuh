@@ -70,4 +70,4 @@ It also demonstrated the importance of reviewing alert details and validating MI
 
 ## 8. Related Incident
 
-[INC-001 – Failed Login](../../Incidents/INC-001-Failed-Login.md)
+[INC-001 – Failed Login](../Incidents/INC-001-Failed-Login.md)
