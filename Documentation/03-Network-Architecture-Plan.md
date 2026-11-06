@@ -13,7 +13,8 @@ The current lab includes:
 - VMware Workstation 17.6.0 on a Windows 11 host.
 - An Ubuntu Server 24.04.5 LTS VM running Wazuh 4.14.
 - An existing Wazuh server connection through VMware NAT (VMnet8).
-- Windows 10 endpoint monitoring through a Wazuh agent.
+- Two Windows 10 endpoint VMs are available: Windows Client 01 and Windows Client 02.
+- Windows Client 02 is the currently active monitored endpoint; Windows Client 01 is currently powered off to conserve host resources.
 - A Kali Linux VM for authorized security testing.
 
 The existing Wazuh server currently uses `192.168.73.132` on its existing NAT network, and Windows Client 02 has been observed at `192.168.73.134`. These settings are to be preserved until the new network is configured and verified.
@@ -49,6 +50,7 @@ The planned pfSense virtual firewall will have three network adapters:
 | Kali Linux | VMnet2 | 192.168.206.10/24 |
 | pfSense Victim/SOC interface | VMnet3 | 192.168.232.1/24 |
 | Windows Client 02 | VMnet3 | 192.168.232.20/24 |
+| Windows Client 01 | VMnet3 | 192.168.232.21/24 (proposed) |
 | Wazuh Server additional interface | VMnet3 | 192.168.232.30/24 |
 
 These are proposed addresses only. They will be assigned after pfSense installation and interface verification. The Wazuh server's existing NAT adapter is intended to remain connected during migration.
@@ -57,7 +59,7 @@ These are proposed addresses only. They will be assigned after pfSense installat
 
 - **Attacker zone:** Kali Linux on VMnet2.
 - **Firewall zone:** pfSense routes and filters traffic between the internal networks.
-- **Victim/SOC zone:** Windows endpoint and Wazuh server on VMnet3.
+- **Victim/SOC zone:** Windows Client 01, Windows Client 02, and Wazuh server on VMnet3. Client 01 is planned as an additional endpoint and is currently powered off.
 - **WAN/uplink:** VMware NAT through VMnet8.
 
 The intended test path is Kali → pfSense → Windows endpoint. Firewall rules will be configured deliberately to permit only the traffic required for each authorized lab exercise. Logging will be enabled where appropriate.
@@ -72,9 +74,10 @@ The Wazuh agent will continue forwarding endpoint telemetry to the Wazuh Manager
 4. Apply restrictive firewall rules between the zones.
 5. Connect Kali to VMnet2.
 6. Add a second network adapter to the Wazuh server on VMnet3 while preserving its existing NAT adapter.
-7. Connect the Windows endpoint to VMnet3, preserving its agent configuration.
-8. Verify addressing, routing, allowed traffic, blocked traffic, and Wazuh event collection.
-9. Begin controlled attack simulations only after the network checks pass.
+7. Connect Windows Client 02 to VMnet3 and validate its existing Wazuh agent connection.
+8. Connect Windows Client 01 to VMnet3, assign its planned address, and verify or deploy its Wazuh agent.
+9. Verify addressing, routing, allowed traffic, blocked traffic, and Wazuh event collection.
+10. Begin controlled attack simulations only after the network checks pass.
 
 ## 7. Resource Constraints
 
@@ -91,5 +94,6 @@ All attack simulations are intended for this isolated, owner-managed virtual lab
 - [x] pfSense VM hardware prepared with three adapters: VMnet8, VMnet2, and VMnet3.
 - [ ] pfSense installation and interface assignment.
 - [ ] Internal IP and DHCP configuration.
-- [ ] Endpoint migration and connectivity validation.
+- [ ] Connect Windows Client 02 and validate its Wazuh telemetry.
+- [ ] Connect Windows Client 01 and validate its Wazuh telemetry.
 - [ ] Firewall rule validation and attack simulations.
