@@ -15,20 +15,22 @@ The goal of this project is to develop practical Blue Team and SOC Analyst skill
 - Understand and apply the MITRE ATT&CK framework.
 - Practice incident documentation and SOC investigation workflows.
 
-## 🏗️ Lab Architecture
+## 🏗️ Current Lab Architecture
 
-The lab runs in a virtualized environment using VMware Workstation.
+The currently operational environment runs in VMware Workstation.
 
-| Component      | Configuration                         |
-| -------------- | ------------------------------------- |
-| SIEM Platform  | Wazuh 4.14                            |
-| Server OS      | Ubuntu Server 24.04 LTS               |
-| Endpoint OS    | Windows 10                            |
-| Virtualization | VMware Workstation                    |
-| Network        | VMware NAT                            |
-| Monitoring     | Windows Security & Application Events |
+| Component | Current Configuration |
+|---|---|
+| SIEM Platform | Wazuh 4.14 |
+| Server OS | Ubuntu Server 24.04.5 LTS |
+| Endpoint OS | Windows 10 |
+| Virtualization | VMware Workstation 17.6.0 |
+| Network | VMware NAT (VMnet8) |
+| Wazuh Server IP | 192.168.73.132 |
+| Active Endpoint | WIN10-CLIENT-02 |
+| Endpoint IP | 192.168.73.134 |
 
-### Environment Overview
+### Current Environment Overview
 
 ```text
               SOC HOME LAB
@@ -53,11 +55,32 @@ The lab runs in a virtualized environment using VMware Workstation.
       +------------+ +------------+
 ```
 
+## 🧭 Planned Attack & Defense Network
+
+The next development phase is to introduce a pfSense virtual firewall and separate the attacker and victim/SOC systems into dedicated virtual networks.
+
+**Status: Planned / Under Construction.** The IP addresses and topology below are design targets, not yet deployed or validated.
+
+| Zone | VMware Network | Planned Subnet | Purpose |
+|---|---|---|---|
+| WAN | VMnet8 (NAT) | 192.168.73.0/24 | Uplink for pfSense |
+| Attacker LAN | VMnet2 (Host-only) | 192.168.206.0/24 | Kali Linux |
+| Victim / SOC LAN | VMnet3 (Host-only) | 192.168.232.0/24 | Windows endpoint and Wazuh |
+
+Planned pfSense interfaces:
+- WAN: VMnet8
+- Attacker LAN: VMnet2 — 192.168.206.1/24
+- Victim / SOC LAN: VMnet3 — 192.168.232.1/24
+
+The existing Wazuh NAT connection will be preserved during the migration. The detailed design and implementation checklist are documented in [Network Architecture Plan](Documentation/03-Network-Architecture-Plan.md).
+
 ## 🛠️ Technologies & Tools
 
 - **Wazuh SIEM** — Security monitoring, alerting, and log analysis.
 - **Ubuntu Server** — Centralized SIEM server.
 - **Windows 10** — Endpoint monitoring and security event generation.
+- **Kali Linux** — Authorized security testing.
+- **pfSense** — Planned virtual firewall and router.
 - **VMware Workstation** — Virtual lab infrastructure.
 - **PowerShell** — Windows administration and event investigation.
 - **MITRE ATT&CK** — Adversary behavior classification.
@@ -89,10 +112,10 @@ The lab runs in a virtualized environment using VMware Workstation.
 
 Detailed investigation reports are maintained in the `Incidents/` directory.
 
-| Incident | Description                                     | Status    |
-| -------- | ----------------------------------------------- | --------- |
-| INC-001  | Failed Login Investigation                      | Completed |
-| INC-002  | Multiple Logon Failures / Brute Force Detection | Completed |
+| Incident | Description | Status |
+|---|---|---|
+| INC-001 | Failed Login Investigation | Completed |
+| INC-002 | Multiple Logon Failures / Brute Force Detection | Completed |
 
 ## 📸 Screenshots & Evidence
 
@@ -106,6 +129,13 @@ Screenshots of the Wazuh dashboard, detected alerts, and investigation results w
 - [x] Generate and detect failed login events.
 - [x] Detect repeated authentication failures.
 - [x] Investigate Windows security events.
+- [x] Create isolated VMware Host-only networks for the planned attack lab.
+- [x] Prepare pfSense VM hardware with three network adapters.
+- [ ] Install and configure pfSense.
+- [ ] Configure routing, DHCP, and firewall rules.
+- [ ] Connect Kali Linux to the attacker network.
+- [ ] Connect Windows and Wazuh to the victim/SOC network.
+- [ ] Validate network isolation, routing, and event collection.
 - [ ] Configure File Integrity Monitoring (FIM).
 - [ ] Perform controlled malware detection testing.
 - [ ] Develop custom Wazuh detection rules.
@@ -124,10 +154,11 @@ This project provides practical experience in:
 - Alert triage and incident reporting.
 - MITRE ATT&CK framework mapping.
 - Blue Team operations and SOC workflows.
+- Virtual network segmentation and firewall concepts (planned).
 
 ## ⚠️ Disclaimer
 
-This project is developed strictly for educational purposes within an isolated virtual lab environment. All security simulations are authorized and conducted on personally managed virtual machines.
+This project is developed strictly for educational purposes within an isolated and authorized virtual lab environment. Security simulations are performed only on personally managed virtual machines. The planned attacker and victim networks will remain isolated from the physical home network.
 
 ---
 
