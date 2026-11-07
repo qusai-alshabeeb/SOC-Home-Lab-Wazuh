@@ -14,7 +14,7 @@ The current lab includes:
 - An Ubuntu Server 24.04.5 LTS VM running Wazuh 4.14.
 - An existing Wazuh server connection through VMware NAT (VMnet8).
 - Two Windows 10 endpoint VMs are available: Windows Client 01 and Windows Client 02.
-- Windows Client 02 is the currently active monitored endpoint; Windows Client 01 is currently powered off to conserve host resources.
+- Windows Client 02 is the currently active monitored endpoint. Windows Client 01 is currently powered off and will be started when a lab scenario requires two monitored endpoints.
 - A Kali Linux VM for authorized security testing.
 
 The existing Wazuh server currently uses `192.168.73.132` on its existing NAT network, and Windows Client 02 has been observed at `192.168.73.134`. These settings are to be preserved until the new network is configured and verified.
@@ -59,7 +59,7 @@ These are proposed addresses only. They will be assigned after pfSense installat
 
 - **Attacker zone:** Kali Linux on VMnet2.
 - **Firewall zone:** pfSense routes and filters traffic between the internal networks.
-- **Victim/SOC zone:** Windows Client 01, Windows Client 02, and Wazuh server on VMnet3. Client 01 is planned as an additional endpoint and is currently powered off.
+- **Victim/SOC zone:** Windows Client 01, Windows Client 02, and Wazuh server on VMnet3. Client 01 is a standby additional endpoint, currently powered off; it will be started when a scenario requires two monitored endpoints.
 - **WAN/uplink:** VMware NAT through VMnet8.
 
 The intended test path is Kali → pfSense → Windows endpoint. Firewall rules will be configured deliberately to permit only the traffic required for each authorized lab exercise. Logging will be enabled where appropriate.
