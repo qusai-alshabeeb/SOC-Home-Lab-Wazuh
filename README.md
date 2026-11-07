@@ -29,7 +29,7 @@ The currently operational environment runs in VMware Workstation.
 | Wazuh Server IP | 192.168.73.132 |
 | Active Endpoint | WIN10-CLIENT-02 |
 | Active Endpoint IP | 192.168.73.134 |
-| Additional Endpoint | WIN10-CLIENT-01 (currently powered off) |
+| Additional Endpoint | WIN10-CLIENT-01 (currently powered off; standby) |
 
 ### Current Environment Overview
 
@@ -73,7 +73,7 @@ Planned pfSense interfaces:
 - Attacker LAN: VMnet2 — 192.168.206.1/24
 - Victim / SOC LAN: VMnet3 — 192.168.232.1/24
 
-Planned endpoint addressing on the Victim/SOC LAN: Windows Client 02 — `192.168.232.20/24`; Windows Client 01 — `192.168.232.21/24` (proposed). Client 01 is currently powered off; its address and agent connectivity have not yet been configured or verified.
+Planned endpoint addressing on the Victim/SOC LAN: Windows Client 02 — `192.168.232.20/24`; Windows Client 01 — `192.168.232.21/24` (proposed). Client 01 is currently powered off and will be started when a lab scenario requires two monitored endpoints. Its address and agent connectivity have not yet been configured or verified.
 
 The existing Wazuh NAT connection will be preserved during the migration. The detailed design and implementation checklist are documented in [Network Architecture Plan](Documentation/03-Network-Architecture-Plan.md).
 
