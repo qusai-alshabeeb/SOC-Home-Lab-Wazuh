@@ -88,6 +88,11 @@ The existing Wazuh NAT connection will be preserved during the migration. The de
 - **PowerShell** — Windows administration and event investigation.
 - **MITRE ATT&CK** — Adversary behavior classification.
 
+
+## 🧪 Attack & Detection Roadmap
+
+A categorized, difficulty-tagged checklist of authorized lab scenarios—from reconnaissance and vulnerability assessment through exploitation simulations, credential access, persistence, network activity, malware behavior simulation, and Blue Team detection engineering—is maintained in the [Attack & Detection Roadmap](Attack-Catalog/README.md). Completed failed-login and brute-force investigations are already marked there based on the existing incident reports.
+
 ## 🔍 Detection & Investigation Scenarios
 
 ### 1. Failed Login Detection
