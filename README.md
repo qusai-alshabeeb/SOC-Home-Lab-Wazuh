@@ -15,11 +15,11 @@ The goal of this project is to develop practical Blue Team and SOC Analyst skill
 - Understand and apply the MITRE ATT&CK framework.
 - Practice incident documentation and SOC investigation workflows.
 
-## 🏗️ Current Lab Architecture
+## 🏗️ Revised Lab Architecture
 
-The lab runs in VMware Workstation and now includes three virtual networks: one NAT uplink and two isolated Host-only networks. pfSense connects the two isolated segments.
+The lab is being simplified to use one isolated internal network for Kali, the Windows endpoints, and the Wazuh server. VMnet3 is being retired, and Kali is being moved from VMnet3 to VMnet2. This removes the need for inter-network routing between the attacker and victim machines during the initial Nmap exercises.
 
-| Component | Current Configuration |
+| Component | Target Configuration |
 |---|---|
 | SIEM Platform | Wazuh 4.14 |
 | SIEM Server OS | Ubuntu Server 24.04.5 LTS |
@@ -28,15 +28,16 @@ The lab runs in VMware Workstation and now includes three virtual networks: one 
 | Firewall / Router | pfSense CE |
 | Virtualization | VMware Workstation 17.6.0 |
 | WAN Network | VMnet8 (NAT) |
-| Victim / SOC Network | VMnet2 (Host-only), 192.168.206.0/24 |
-| Attacker Network | VMnet3 (Host-only), 192.168.232.0/24 |
-| pfSense WAN | VMnet8, DHCP address 192.168.73.135 (observed) |
+| Internal Lab Network | VMnet2, 192.168.206.0/24 (Host-only; verify VMware network type after reconfiguration) |
+| pfSense WAN | VMnet8, DHCP address 192.168.73.135 (previously observed; verify current lease) |
 | pfSense LAN | VMnet2, 192.168.206.1/24 |
-| pfSense OPT1 | VMnet3, 192.168.232.1/24 |
-| Active Windows Endpoint | WIN10-CLIENT-02 |
-| Standby Windows Endpoint | WIN10-CLIENT-01 (powered off; start when a scenario needs two endpoints) |
+| pfSense OPT1 | To be retired with VMnet3; remove/disconnect the third adapter after confirming the new topology |
+| Kali Linux | VMnet2 (to be moved from VMnet3) |
+| Active Windows Endpoint | WIN10-CLIENT-02, VMnet2 |
+| Wazuh Server | Ubuntu Server, VMnet2 |
+| Standby Windows Endpoint | WIN10-CLIENT-01, VMnet2 (powered off; start when a scenario needs two endpoints) |
 
-### Current Environment Overview
+### Target Environment Overview
 
 ```text
                          INTERNET / HOST NAT
@@ -44,36 +45,29 @@ The lab runs in VMware Workstation and now includes three virtual networks: one 
                          VMware VMnet8 (NAT)
                                 |
                          pfSense WAN (em0)
-                         192.168.73.135
                                 |
-                    +-----------+-----------+
-                    |       pfSense         |
-                    |   Firewall / Router   |
-                    +-----------+-----------+
+                         +------+------+
+                         |   pfSense   |
+                         | Firewall /  |
+                         |   Router    |
+                         +------+------+
                                 |
-             +------------------+------------------+
-             |                                     |
-       pfSense LAN (em1)                      pfSense OPT1 (em2)
-       VMnet2 - Host-only                     VMnet3 - Host-only
-       192.168.206.1/24                       192.168.232.1/24
-       VICTIM / SOC                            ATTACKER
-             |                                     |
-       +-----+----------------+                    |
-       |                      |                    |
-  +----+---------+     +------+----------+    +----+---------+
-  | Ubuntu       |     | Windows 10      |    | Kali Linux   |
-  | Wazuh Server |     | Client 02       |    | Attacker VM  |
-  +--------------+     +-----------------+    +--------------+
-                             
-                       +-----------------+
-                       | Windows 10      |
-                       | Client 01       |
-                       | Standby / OFF   |
-                       +-----------------+
-                       (Connected to VMnet2 when needed)
+                    pfSense LAN (em1)
+                    VMnet2 - Internal Lab
+                    192.168.206.1/24
+                                |
+             +------------------+-------------------+
+             |                  |                   |
+       +-----+------+    +------+---------+   +-----+----------+
+       | Kali Linux |    | Windows Client |   | Ubuntu Wazuh   |
+       | Attacker   |    | 02             |   | Server         |
+       +------------+    +----------------+   +----------------+
+                                |
+                         Windows Client 01
+                         Standby / OFF
 ```
 
-**Network status:** VMnet2 and VMnet3 are configured as isolated Host-only networks with VMware DHCP disabled. pfSense has WAN, LAN, and OPT1 interfaces assigned and configured with the addresses shown above. Inter-network routing, firewall policy, endpoint addressing, and Wazuh telemetry across the segmented topology must still be validated before treating the attack path as fully operational.
+**Topology transition status:** VMnet3 is planned for removal and Kali is planned to move to VMnet2. The new single-segment layout is the target design, not yet fully validated. Confirm VMnet2 is configured as Host-only with VMware DHCP disabled, move Kali to VMnet2, and then verify all VM IP addresses, default gateways, pfSense LAN access, and Wazuh agent connectivity. Once the transition is confirmed, remove pfSense's unused OPT1 adapter/interface configuration. Devices on the same VMnet2 subnet communicate directly at Layer 2; their traffic does not pass through pfSense's routing/firewall path. pfSense will still provide the LAN gateway and WAN access, subject to its LAN rules and outbound NAT.
 
 ## 🛠️ Technologies & Tools
 
